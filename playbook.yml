@@ -7,3 +7,19 @@
       - virtualenv
       update_cache: yes
     become: yes
+  - name: Instalando dependências com pip
+    pip:
+      virtualenv: /home/ubuntu/curly-sniffe/venv
+      name:
+        - django
+        - djangorestframework
+        ...
+  - name: Iniciando o projeto
+    shell: '. /home/ubuntu/curly-sniffe/venv/bin/activate; django-admin startproject setup /home/ubuntu/curly-sniffe/'
+    ignore_errors: yes
+  - name: Alterando hosts do settings
+    lineinfile:
+      path: /home/ubuntu/curly-sniffe/setup/settings.py
+      regexp: ‘ALLOWED_HOSTS’
+      line: 'ALLOWED_HOSTS = ["*"]'
+      backrefs: yes
