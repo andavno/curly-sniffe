@@ -41,11 +41,11 @@ resource "aws_key_pair" "chaveSSH" {
 }
 
 resource "aws_default_subnet" "subnet_a" {
-  availability_zones =  "${var.region}a"
+  availability_zone =  "${var.region}a"
 }
 
 resource "aws_default_subnet" "subnet_b" {
-  availability_zones =  "${var.region}b"
+  availability_zone =  "${var.region}b"
 }
 resource "aws_lb" "loadBalancer" {
   internal = false
@@ -67,5 +67,17 @@ resource "aws_lb_listener" "entradaLoadBalancer" {
   default_action {
     type = "forward"
     target_group_arn = aws_lb_target_group.alvoLoadBalancer.arn
+  }
+}
+
+resource "aws_autoscaling_policy" "escala-Producao" {
+  name = "terraform-escala"
+  autoscaling_group_name = var.nomeGrupo
+  policy_type = "TargetTrackingScaling"
+  target_tracking_configuration {
+    predefined_metric_specification {
+      predefined_metric_type = "ASGAverageCPUUtilization"
+    }
+    target_value = 50.0
   }
 }
