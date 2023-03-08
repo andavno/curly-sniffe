@@ -12,12 +12,11 @@
       github: https://github.com/guilhermeonrails/clientes-leo-api.git
       dest: /home/ubuntu/curly-sniffe
       version: master
+      force: yes
   - name: Instalando dependências com pip
     pip:
       virtualenv: /home/ubuntu/curly-sniffe/venv
-      name:
-        - django
-        - djangorestframework
+      requirements: /home/ubuntu/curly-sniffe/requirements.txt
         ...
   - name: Alterando hosts do settings
     lineinfile:
@@ -25,3 +24,9 @@
       regexp: ‘ALLOWED_HOSTS’
       line: 'ALLOWED_HOSTS = ["*"]'
       backrefs: yes
+      - name: configurando o banco de dados
+    shell: '. /home/ubuntu/curly-sniffe/venv/bin/activate; python /home/ubuntu/curly-sniffe/manage.py migrate'
+  - name: carregando os dados iniciais
+    shell: '. /home/ubuntu/curly-sniffe/venv/bin/activate; python /home/ubuntu/curly-sniffe/manage.py loaddata clientes.json'
+  - name: iniciando o servidor
+    shell: '. /home/ubuntu/curly-sniffe/venv/bin/activate; nohup python /home/ubuntu/curly-sniffe/manage.py runserver 0.0.0.0:8000 &'
