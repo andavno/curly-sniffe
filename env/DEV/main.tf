@@ -4,8 +4,8 @@ module "aws-dev" {
     region = "us-west-2"
     key = "IaC-DEV"
     name = "DEV instance"
-}
-
-output "dev_IP" {
-  value = module.aws-dev.public_IP
+    grupodeSeguranca = "DEV"
+    minimo = 0
+    maximo = 1
+    nomeGrupo = "Dev"
 }
