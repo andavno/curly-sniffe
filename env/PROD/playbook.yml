@@ -1,0 +1,27 @@
+- hosts: terraform-ansible
+  tasks:
+  - name: Instalando o Python
+    apt:
+      pkg:
+      - python3
+      - virtualenv
+      update_cache: yes
+    become: yes
+  - name: Git Clone
+    ansible.builtin.git:
+      github: https://github.com/guilhermeonrails/clientes-leo-api.git
+      dest: /home/ubuntu/curly-sniffe
+      version: master
+  - name: Instalando dependências com pip
+    pip:
+      virtualenv: /home/ubuntu/curly-sniffe/venv
+      name:
+        - django
+        - djangorestframework
+        ...
+  - name: Alterando hosts do settings
+    lineinfile:
+      path: /home/ubuntu/curly-sniffe/setup/settings.py
+      regexp: ‘ALLOWED_HOSTS’
+      line: 'ALLOWED_HOSTS = ["*"]'
+      backrefs: yes

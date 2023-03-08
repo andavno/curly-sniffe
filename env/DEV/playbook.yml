@@ -14,8 +14,13 @@
         - django
         - djangorestframework
         ...
+  - name: verificando se o projeto ja foi iniciado
+    stat:
+      path: /home/ubuntu/curly-sniffe/setup/settings.py
+    register: projeto
   - name: Iniciando o projeto
     shell: '. /home/ubuntu/curly-sniffe/venv/bin/activate; django-admin startproject setup /home/ubuntu/curly-sniffe/'
+    when: not projeto.stat.exists
     ignore_errors: yes
   - name: Alterando hosts do settings
     lineinfile:
